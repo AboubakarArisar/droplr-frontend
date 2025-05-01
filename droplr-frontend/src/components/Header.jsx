@@ -6,7 +6,7 @@ export const Header = () => {
     <header className='flex items-center justify-between py-4 px-8 bg-[#1e293b] shadow-lg  '>
       <div className='text-3xl  text-center w-full font-bold text-blue-500 tracking-wide'>
         <span className='cursor-pointer' onClick={() => navigate("/")}>
-          PindariDrop
+          Droplr
         </span>
       </div>
     </header>
