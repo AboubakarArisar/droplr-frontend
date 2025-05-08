@@ -45,12 +45,11 @@ const App = () => {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white'>
-      {/* Background Pattern */}
+     
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGMwIDIuMjA5LTEuNzkxIDQtNCA0cy00LTEuNzkxLTQtNCAxLjc5MS00IDQtNCA0IDEuNzkxIDQgNHoiIGZpbGw9IiMyNTYzZWIiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-10"></div>
 
       <div className='relative min-h-screen flex items-center justify-center px-4 py-12'>
         <div className='max-w-4xl w-full'>
-          {/* Header Section */}
           <div className='text-center mb-12'>
             <h1 className='text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600'>
               Welcome to Droplr
@@ -60,10 +59,8 @@ const App = () => {
             </p>
           </div>
 
-          {/* Main Card */}
           <div className='bg-[#1e293b] rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'>
             <div className='p-8 md:p-12'>
-              {/* Status Section */}
               <div className='mb-8'>
                 {loading ? (
                   <div className='text-center space-y-4'>
@@ -111,7 +108,6 @@ const App = () => {
                 )}
               </div>
 
-              {/* Action Button */}
               {location && !error && (
                 <div className='text-center'>
                   <button
@@ -143,7 +139,6 @@ const App = () => {
               )}
             </div>
 
-            {/* Features Section */}
             <div className='bg-[#0f172a] p-8 border-t border-gray-700'>
               <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
                 <div className='text-center'>
