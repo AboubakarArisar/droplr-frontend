@@ -16,7 +16,7 @@ export const Zone = () => {
   const [downloadingFile, setDownloadingFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const location = useLocation();
-  const { latitude, longitude } = location.state || {};
+  const { latitude, longitude, accuracy, method } = location.state || {};
 
   useEffect(() => {
     if (latitude && longitude) {
@@ -52,9 +52,14 @@ export const Zone = () => {
   const fetchNearbyFiles = async () => {
     setLoadingFiles(true);
     try {
-      const response = await fetch(
-        `${API_URL}/files/nearby?latitude=${latitude}&longitude=${longitude}`
-      );
+      const url = new URL(`${API_URL}/files/nearby`);
+      url.searchParams.append("latitude", latitude);
+      url.searchParams.append("longitude", longitude);
+      if (accuracy) {
+        url.searchParams.append("accuracy", accuracy);
+      }
+
+      const response = await fetch(url);
       const data = await response.json();
       if (data.success) {
         // Add remaining time to each file
@@ -191,15 +196,18 @@ export const Zone = () => {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white px-6 py-10'>
-    <Toaster/>
+      <Toaster />
       <div className='max-w-7xl mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
           <div className='bg-[#1e293b] border border-gray-700 rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl'>
             <div className='flex items-center justify-between mb-6'>
               <h2 className='text-2xl font-bold tracking-wide'>Drop a File</h2>
               <div className='text-blue-400 text-sm'>
-                <span className='font-medium'>Location:</span>{" "}
-                {latitude?.toFixed(4)}, {longitude?.toFixed(4)}
+                <div className='text-right'>
+                  <div className='font-medium'>
+                    Location: {latitude?.toFixed(4)}, {longitude?.toFixed(4)}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -246,16 +254,26 @@ export const Zone = () => {
             </div>
 
             {uploading && (
-              <div className='mt-6 space-y-2'>
-                <div className='h-2 w-full bg-gray-700 rounded-full overflow-hidden'>
+              <div className='mt-6 space-y-3'>
+                <div className='text-center'>
+                  <div className='text-2xl font-bold text-blue-400 mb-2'>
+                    {progress}%
+                  </div>
+                  <div className='text-sm text-gray-400'>
+                    Uploading your file...
+                  </div>
+                </div>
+                <div className='h-3 w-full bg-gray-700 rounded-full overflow-hidden'>
                   <div
-                    className='h-full bg-blue-600 transition-all duration-300 ease-out'
+                    className='h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out rounded-full'
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <p className='text-sm text-center text-blue-400'>
-                  Uploading... {progress}%
-                </p>
+                <div className='flex justify-between text-xs text-gray-400'>
+                  <span>0%</span>
+                  <span>50%</span>
+                  <span>100%</span>
+                </div>
               </div>
             )}
 
@@ -298,7 +316,7 @@ export const Zone = () => {
                       d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
                     ></path>
                   </svg>
-                  <span>Uploading...</span>
+                  <span>Uploading... {progress}%</span>
                 </>
               ) : (
                 <>
@@ -325,7 +343,13 @@ export const Zone = () => {
             <div className='flex items-center justify-between mb-6'>
               <h2 className='text-2xl font-bold tracking-wide'>Nearby Files</h2>
               <div className='flex items-center space-x-2'>
-                <span className='text-sm text-gray-400'>within 200m</span>
+                <span className='text-sm text-gray-400'>
+                  within{" "}
+                  {accuracy && accuracy > 100
+                    ? Math.min(500, 200 + accuracy)
+                    : 200}
+                  m
+                </span>
                 <button
                   onClick={fetchNearbyFiles}
                   disabled={loadingFiles}
@@ -443,15 +467,17 @@ export const Zone = () => {
                           <h3 className='font-medium text-white group-hover:text-blue-400 transition-colors'>
                             {file.filename}
                           </h3>
-                          <p
-                            className={`text-sm ${
-                              file.remainingTime <= 0
-                                ? "text-red-400"
-                                : "text-blue-400"
-                            }`}
-                          >
-                            {formatRemainingTime(file.remainingTime)}
-                          </p>
+                          <div className='flex items-center gap-3 space-x-3 text-sm'>
+                            <p
+                              className={`${
+                                file.remainingTime <= 0
+                                  ? "text-red-400"
+                                  : "text-blue-400"
+                              }`}
+                            >
+                              {formatRemainingTime(file.remainingTime)}
+                            </p>
+                          </div>
                         </div>
                       </div>
                       <button
