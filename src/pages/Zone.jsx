@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { config } from "../config";
 import toast, { Toaster } from "react-hot-toast";
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 
 const API_URL = config.apiUrl;
 const EXPIRY_TIME = config.expiryTime;
@@ -195,14 +197,16 @@ export const Zone = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white px-6 py-10'>
+    <div className='min-h-screen bg-gray-50 flex flex-col'>
       <Toaster />
-      <div className='max-w-7xl mx-auto'>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
-          <div className='bg-[#1e293b] border border-gray-700 rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl'>
+      <main className='flex-1 max-w-7xl mx-auto w-full px-4 py-12'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
+          <div className='bg-white border border-gray-100 rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl'>
             <div className='flex items-center justify-between mb-6'>
-              <h2 className='text-2xl font-bold tracking-wide'>Drop a File</h2>
-              <div className='text-blue-400 text-sm'>
+              <h2 className='text-2xl font-bold tracking-wide text-gray-900'>
+                Drop a File
+              </h2>
+              <div className='text-blue-500 text-sm'>
                 <div className='text-right'>
                   <div className='font-medium'>
                     Location: {latitude?.toFixed(4)}, {longitude?.toFixed(4)}
@@ -210,12 +214,11 @@ export const Zone = () => {
                 </div>
               </div>
             </div>
-
             <div
               className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-300 ${
                 isDragging
-                  ? "border-blue-500 bg-blue-500/10"
-                  : "border-gray-600 hover:border-blue-400"
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 hover:border-blue-400"
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -244,7 +247,7 @@ export const Zone = () => {
                 </svg>
                 <p
                   className={`text-lg font-medium mb-2 transition-colors duration-300 ${
-                    isDragging ? "text-blue-400" : "text-gray-300"
+                    isDragging ? "text-blue-400" : "text-gray-500"
                   }`}
                 >
                   {file ? file.name : "Drag and drop your file here"}
@@ -252,18 +255,17 @@ export const Zone = () => {
                 <p className='text-sm text-gray-400'>or click to browse</p>
               </div>
             </div>
-
             {uploading && (
               <div className='mt-6 space-y-3'>
                 <div className='text-center'>
-                  <div className='text-2xl font-bold text-blue-400 mb-2'>
+                  <div className='text-2xl font-bold text-blue-500 mb-2'>
                     {progress}%
                   </div>
                   <div className='text-sm text-gray-400'>
                     Uploading your file...
                   </div>
                 </div>
-                <div className='h-3 w-full bg-gray-700 rounded-full overflow-hidden'>
+                <div className='h-3 w-full bg-gray-100 rounded-full overflow-hidden'>
                   <div
                     className='h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out rounded-full'
                     style={{ width: `${progress}%` }}
@@ -276,22 +278,20 @@ export const Zone = () => {
                 </div>
               </div>
             )}
-
             {error && (
-              <div className='mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg'>
-                <p className='text-red-400 text-sm text-center'>{error}</p>
+              <div className='mt-4 p-3 bg-red-100 border border-red-200 rounded-lg'>
+                <p className='text-red-500 text-sm text-center'>{error}</p>
               </div>
             )}
-
             <button
               onClick={handleUpload}
               disabled={!file || uploading}
               className={`mt-6 w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-2 ${
                 uploading
-                  ? "bg-gray-600 cursor-wait"
+                  ? "bg-gray-200 cursor-wait"
                   : !file
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                  ? "bg-gray-200 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 cursor-pointer text-white"
               }`}
             >
               {uploading ? (
@@ -338,10 +338,11 @@ export const Zone = () => {
               )}
             </button>
           </div>
-
-          <div className='bg-[#1e293b] border border-gray-700 rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl'>
+          <div className='bg-white border border-gray-100 rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl'>
             <div className='flex items-center justify-between mb-6'>
-              <h2 className='text-2xl font-bold tracking-wide'>Nearby Files</h2>
+              <h2 className='text-2xl font-bold tracking-wide text-gray-900'>
+                Nearby Files
+              </h2>
               <div className='flex items-center space-x-2'>
                 <span className='text-sm text-gray-400'>
                   within{" "}
@@ -355,8 +356,8 @@ export const Zone = () => {
                   disabled={loadingFiles}
                   className={`p-2 rounded-lg transition-colors ${
                     loadingFiles
-                      ? "text-gray-500 cursor-wait"
-                      : "text-blue-400 hover:text-blue-300 cursor-pointer"
+                      ? "text-gray-400 cursor-wait"
+                      : "text-blue-500 hover:text-blue-600 cursor-pointer"
                   }`}
                 >
                   {loadingFiles ? (
@@ -398,7 +399,6 @@ export const Zone = () => {
                 </button>
               </div>
             </div>
-
             {loadingFiles ? (
               <div className='flex justify-center items-center py-12'>
                 <svg
@@ -425,7 +425,7 @@ export const Zone = () => {
             ) : nearbyFiles.length === 0 ? (
               <div className='text-center py-12'>
                 <svg
-                  className='mx-auto h-12 w-12 text-gray-400 mb-4'
+                  className='mx-auto h-12 w-12 text-gray-300 mb-4'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -444,13 +444,13 @@ export const Zone = () => {
                 {nearbyFiles.map((file, idx) => (
                   <div
                     key={idx}
-                    className='group bg-[#0f172a] rounded-xl border border-gray-700 p-4 transition-all duration-300 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10'
+                    className='group bg-gray-50 rounded-xl border border-gray-100 p-4 transition-all duration-300 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10'
                   >
                     <div className='flex items-center justify-between'>
                       <div className='flex items-center space-x-3'>
-                        <div className='p-2 bg-blue-500/10 rounded-lg'>
+                        <div className='p-2 bg-blue-100 rounded-lg'>
                           <svg
-                            className='h-6 w-6 text-blue-400'
+                            className='h-6 w-6 text-blue-500'
                             fill='none'
                             stroke='currentColor'
                             viewBox='0 0 24 24'
@@ -464,15 +464,15 @@ export const Zone = () => {
                           </svg>
                         </div>
                         <div>
-                          <h3 className='font-medium text-white group-hover:text-blue-400 transition-colors'>
+                          <h3 className='font-medium text-gray-900 group-hover:text-blue-500 transition-colors'>
                             {file.filename}
                           </h3>
                           <div className='flex items-center gap-3 space-x-3 text-sm'>
                             <p
                               className={`${
                                 file.remainingTime <= 0
-                                  ? "text-red-400"
-                                  : "text-blue-400"
+                                  ? "text-red-500"
+                                  : "text-blue-500"
                               }`}
                             >
                               {formatRemainingTime(file.remainingTime)}
@@ -490,10 +490,10 @@ export const Zone = () => {
                         }
                         className={`p-2 rounded-lg transition-all duration-300 ${
                           downloadingFile === file.filename
-                            ? "bg-gray-600 cursor-wait"
+                            ? "bg-gray-200 cursor-wait"
                             : file.remainingTime <= 0
-                            ? "bg-gray-600 cursor-not-allowed"
-                            : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                            ? "bg-gray-200 cursor-not-allowed"
+                            : "bg-blue-600 hover:bg-blue-700 cursor-pointer text-white"
                         }`}
                       >
                         {downloadingFile === file.filename ? (
@@ -554,14 +554,14 @@ export const Zone = () => {
             )}
           </div>
         </div>
-      </div>
+      </main>
 
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #1e293b;
+          background: #f3f4f6;
           border-radius: 3px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {

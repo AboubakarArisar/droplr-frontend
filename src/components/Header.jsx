@@ -1,14 +1,26 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 export const Header = () => {
-  const navigate = useNavigate();
   return (
-    <header className='flex items-center justify-between py-4 px-8 bg-[#1e293b] shadow-lg  '>
-      <div className='text-3xl  text-center w-full font-bold text-blue-500 tracking-wide'>
-        <span className='cursor-pointer' onClick={() => navigate("/")}>
-          Droplr
+    <header className='w-full bg-white shadow-sm py-4 px-6 flex justify-between items-center'>
+      <div className='flex items-center space-x-2'>
+        <span className='inline-block w-8 h-8 bg-gradient-to-tr from-blue-500 to-blue-700 rounded-lg mr-2'></span>
+        <span className='text-2xl font-bold text-gray-800 tracking-tight'>
+          <Link to='/'>Droplr</Link>
         </span>
       </div>
+      <nav className='hidden md:flex space-x-8 text-gray-600 font-medium'>
+        <a href='#features' className='hover:text-blue-600 transition'>
+          Features
+        </a>
+        <a href='#how' className='hover:text-blue-600 transition'>
+          How it works
+        </a>
+        <a href='#security' className='hover:text-blue-600 transition'>
+          Security
+        </a>
+      </nav>
     </header>
   );
 };
