@@ -309,6 +309,58 @@ const App = () => {
                 </div>
               </div>
             )}
+            {!loading &&
+              location &&
+              (locationMethod === "Network" || accuracy > 200) && (
+                <div className='mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-yellow-800 text-sm'>
+                  <div className='mb-2 font-semibold'>
+                    Location may be inaccurate. Enter your location manually for
+                    best results:
+                  </div>
+                  <div className='flex gap-2 items-center'>
+                    <input
+                      type='number'
+                      step='0.000001'
+                      min='-90'
+                      max='90'
+                      className='border rounded px-2 py-1 w-32 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                      placeholder='Latitude'
+                      value={location.latitude}
+                      onChange={(e) =>
+                        setLocation({
+                          ...location,
+                          latitude: parseFloat(e.target.value),
+                        })
+                      }
+                    />
+                    <input
+                      type='number'
+                      step='0.000001'
+                      min='-180'
+                      max='180'
+                      className='border rounded px-2 py-1 w-32 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                      placeholder='Longitude'
+                      value={location.longitude}
+                      onChange={(e) =>
+                        setLocation({
+                          ...location,
+                          longitude: parseFloat(e.target.value),
+                        })
+                      }
+                    />
+                    <button
+                      className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition-colors ml-2'
+                      onClick={() => setAccuracy(10)}
+                    >
+                      Set Location
+                    </button>
+                  </div>
+                  <div className='mt-2 text-xs text-gray-500'>
+                    Enter latitude and longitude from Google Maps or your mobile
+                    device for best accuracy.
+                  </div>
+                </div>
+              )}
             {location && !error && (
               <div className='text-center mt-6'>
                 <button

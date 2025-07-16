@@ -17,6 +17,11 @@ export const Zone = () => {
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [downloadingFile, setDownloadingFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [visibility, setVisibility] = useState("public");
+  const [password, setPassword] = useState("");
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [downloadTarget, setDownloadTarget] = useState(null);
+  const [downloadPassword, setDownloadPassword] = useState("");
   const location = useLocation();
   const { latitude, longitude, accuracy, method } = location.state || {};
 
@@ -86,7 +91,6 @@ export const Zone = () => {
 
   const handleUpload = async () => {
     if (!file || !latitude || !longitude) return;
-
     if (file.size > 104857600) {
       toast.error("File size exceeds upload smaller than 100MB");
       return;
@@ -94,22 +98,25 @@ export const Zone = () => {
     setUploading(true);
     setProgress(0);
     setError(null);
-
     const formData = new FormData();
     formData.append("file", file);
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
-
+    formData.append("visibility", visibility);
+    if (visibility === "private" && password) {
+      formData.append("password", password);
+    }
     try {
       const response = await fetch(`${API_URL}/files/upload`, {
         method: "POST",
         body: formData,
       });
-
       const data = await response.json();
       if (data.success) {
         setProgress(100);
         setFile(null);
+        setPassword("");
+        setVisibility("public");
         fetchNearbyFiles();
       } else {
         setError(data.message || "Upload failed");
@@ -122,7 +129,19 @@ export const Zone = () => {
     }
   };
 
-  const handleDownload = async (fileUrl, filename) => {
+  // Download handler for public/private
+  const handleDownload = async (file) => {
+    if (file.visibility === "private") {
+      setDownloadTarget(file);
+      setShowPasswordPrompt(true);
+      setDownloadPassword("");
+      return;
+    }
+    await directDownload(file.fileUrl, file.filename);
+  };
+
+  // Direct download helper
+  const directDownload = async (fileUrl, filename) => {
     try {
       setDownloadingFile(filename);
       const response = await fetch(fileUrl);
@@ -140,6 +159,37 @@ export const Zone = () => {
       console.error(err);
     } finally {
       setDownloadingFile(null);
+    }
+  };
+
+  // Handle password-protected download
+  const handlePrivateDownload = async () => {
+    if (!downloadTarget) return;
+    setDownloadingFile(downloadTarget.filename);
+    setShowPasswordPrompt(false);
+    setError(null);
+    try {
+      const response = await fetch(
+        `${API_URL}/files/download/${downloadTarget._id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: downloadPassword }),
+        }
+      );
+      const data = await response.json();
+      if (data.success && data.data && data.data.fileUrl) {
+        await directDownload(data.data.fileUrl, data.data.filename);
+      } else {
+        setError(data.message || "Download failed");
+      }
+    } catch (err) {
+      setError("Error downloading file");
+      console.error(err);
+    } finally {
+      setDownloadingFile(null);
+      setDownloadTarget(null);
+      setDownloadPassword("");
     }
   };
 
@@ -255,6 +305,53 @@ export const Zone = () => {
                 <p className='text-sm text-gray-400'>or click to browse</p>
               </div>
             </div>
+
+            <div className='mt-4 flex flex-col gap-3'>
+              <label className='text-sm font-semibold text-gray-700 mb-1'>
+                Visibility
+              </label>
+              <div className='relative w-full'>
+                <select
+                  className='w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm appearance-none'
+                  value={visibility}
+                  onChange={(e) => setVisibility(e.target.value)}
+                  disabled={uploading}
+                >
+                  <option value='public'>Public</option>
+                  <option value='private'>Private</option>
+                </select>
+                <span className='absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400'>
+                  <svg
+                    className='h-4 w-4'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M19 9l-7 7-7-7'
+                    />
+                  </svg>
+                </span>
+              </div>
+              {visibility === "private" && (
+                <div className='flex flex-col gap-1'>
+                  <label className='text-sm font-semibold text-gray-700 mb-1'>
+                    Password
+                  </label>
+                  <input
+                    type='password'
+                    className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder='Set a password'
+                    disabled={uploading}
+                  />
+                </div>
+              )}
+            </div>
             {uploading && (
               <div className='mt-6 space-y-3'>
                 <div className='text-center'>
@@ -330,7 +427,7 @@ export const Zone = () => {
                       strokeLinecap='round'
                       strokeLinejoin='round'
                       strokeWidth='2'
-                      d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
+                      d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4'
                     />
                   </svg>
                   <span>Upload File</span>
@@ -448,7 +545,7 @@ export const Zone = () => {
                   >
                     <div className='flex items-center justify-between'>
                       <div className='flex items-center space-x-3'>
-                        <div className='p-2 bg-blue-100 rounded-lg'>
+                        <div className='p-2 bg-blue-100 rounded-lg relative'>
                           <svg
                             className='h-6 w-6 text-blue-500'
                             fill='none'
@@ -462,10 +559,74 @@ export const Zone = () => {
                               d={getFileIcon(file.filename)}
                             />
                           </svg>
+                          {file.visibility === "private" && (
+                            <span className='absolute -top-2 -right-2 bg-white rounded-full p-1 shadow'>
+                              <svg
+                                className='h-4 w-4 text-blue-600'
+                                fill='none'
+                                stroke='currentColor'
+                                viewBox='0 0 24 24'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='2'
+                                  d='M12 17a2 2 0 002-2v-2a2 2 0 00-4 0v2a2 2 0 002 2zm6-2V9a6 6 0 10-12 0v6a2 2 0 002 2h8a2 2 0 002-2z'
+                                />
+                                <rect
+                                  x='9'
+                                  y='11'
+                                  width='6'
+                                  height='6'
+                                  rx='2'
+                                  fill='currentColor'
+                                />
+                                <rect
+                                  x='11'
+                                  y='14'
+                                  width='2'
+                                  height='2'
+                                  rx='1'
+                                  fill='white'
+                                />
+                              </svg>
+                            </span>
+                          )}
                         </div>
                         <div>
-                          <h3 className='font-medium text-gray-900 group-hover:text-blue-500 transition-colors'>
+                          <h3 className='font-medium text-gray-900 group-hover:text-blue-500 transition-colors flex items-center gap-1'>
                             {file.filename}
+                            {file.visibility === "private" && (
+                              <svg
+                                className='h-4 w-4 text-blue-600 ml-1'
+                                fill='none'
+                                stroke='currentColor'
+                                viewBox='0 0 24 24'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='2'
+                                  d='M12 17a2 2 0 002-2v-2a2 2 0 00-4 0v2a2 2 0 002 2zm6-2V9a6 6 0 10-12 0v6a2 2 0 002 2h8a2 2 0 002-2z'
+                                />
+                                <rect
+                                  x='9'
+                                  y='11'
+                                  width='6'
+                                  height='6'
+                                  rx='2'
+                                  fill='currentColor'
+                                />
+                                <rect
+                                  x='11'
+                                  y='14'
+                                  width='2'
+                                  height='2'
+                                  rx='1'
+                                  fill='white'
+                                />
+                              </svg>
+                            )}
                           </h3>
                           <div className='flex items-center gap-3 space-x-3 text-sm'>
                             <p
@@ -481,9 +642,7 @@ export const Zone = () => {
                         </div>
                       </div>
                       <button
-                        onClick={() =>
-                          handleDownload(file.fileUrl, file.filename)
-                        }
+                        onClick={() => handleDownload(file)}
                         disabled={
                           downloadingFile === file.filename ||
                           file.remainingTime <= 0
@@ -550,6 +709,63 @@ export const Zone = () => {
                     </div>
                   </div>
                 ))}
+                {/* Password prompt modal for private file download */}
+                {showPasswordPrompt && (
+                  <div className='fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50'>
+                    <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-xs'>
+                      <h3 className='text-lg font-bold mb-2 text-gray-900 flex items-center gap-2'>
+                        <svg
+                          className='h-5 w-5 text-gray-500'
+                          fill='none'
+                          stroke='currentColor'
+                          viewBox='0 0 24 24'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            strokeWidth='2'
+                            d='M12 17a2 2 0 002-2v-2a2 2 0 00-4 0v2a2 2 0 002 2zm6-2V9a6 6 0 10-12 0v6a2 2 0 002 2h8a2 2 0 002-2z'
+                          />
+                        </svg>
+                        Private File
+                      </h3>
+                      <p className='text-sm text-gray-500 mb-4'>
+                        Enter password to download{" "}
+                        <span className='font-medium'>
+                          {downloadTarget?.filename}
+                        </span>
+                      </p>
+                      <input
+                        type='password'
+                        className='border rounded px-3 py-2 w-full mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                        placeholder='Password'
+                        value={downloadPassword}
+                        onChange={(e) => setDownloadPassword(e.target.value)}
+                        autoFocus
+                      />
+                      <div className='flex gap-2'>
+                        <button
+                          className='flex-1 py-2 rounded bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors'
+                          onClick={handlePrivateDownload}
+                          disabled={!downloadPassword || downloadingFile}
+                        >
+                          Download
+                        </button>
+                        <button
+                          className='flex-1 py-2 rounded bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-colors'
+                          onClick={() => {
+                            setShowPasswordPrompt(false);
+                            setDownloadTarget(null);
+                            setDownloadPassword("");
+                          }}
+                          disabled={downloadingFile}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
