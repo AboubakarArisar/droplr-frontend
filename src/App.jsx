@@ -169,27 +169,7 @@ const App = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gray-50 flex flex-col'>
-      {/* <header className='w-full bg-white shadow-sm py-4 px-6 flex justify-between items-center'>
-        <div className='flex items-center space-x-2'>
-          <span className='inline-block w-8 h-8 bg-gradient-to-tr from-blue-500 to-blue-700 rounded-lg mr-2'></span>
-          <span className='text-2xl font-bold text-gray-800 tracking-tight'>
-            Droplr
-          </span>
-        </div>
-        <nav className='hidden md:flex space-x-8 text-gray-600 font-medium'>
-          <a href='#features' className='hover:text-blue-600 transition'>
-            Features
-          </a>
-          <a href='#how' className='hover:text-blue-600 transition'>
-            How it works
-          </a>
-          <a href='#security' className='hover:text-blue-600 transition'>
-            Security
-          </a>
-        </nav>
-      </header> */}
-
+    <div className='min-h-screen bg-gray-100 flex flex-col'>
       <section className='flex-1 flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto px-6 py-16 md:py-24'>
         <div className='flex-1 mb-12 md:mb-0 md:mr-12'>
           <h1 className='text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight'>
@@ -201,14 +181,6 @@ const App = () => {
             200 meters. No sign-up, no hassle. Files are auto-deleted after 20
             minutes for your privacy.
           </p>
-          <div className='flex flex-col sm:flex-row items-center gap-4'>
-            <Link
-              to='/zone'
-              className='bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg transition'
-            >
-              Get Started
-            </Link>
-          </div>
         </div>
         <div className='flex-1 flex items-center justify-center'>
           <div className='w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 border border-gray-100'>
@@ -421,181 +393,6 @@ const App = () => {
       </section>
 
       <section
-        id='features'
-        className='bg-white py-20 border-t border-gray-100'
-      >
-        <div className='max-w-6xl mx-auto px-6'>
-          <h2 className='text-3xl md:text-4xl font-bold text-gray-900 text-center mb-12'>
-            Why choose Droplr?
-          </h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            <div className='bg-gray-50 rounded-2xl shadow p-8 flex flex-col items-center text-center border border-gray-100'>
-              <div className='bg-blue-100 p-4 rounded-full mb-4'>
-                <svg
-                  className='h-8 w-8 text-blue-500'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
-                  />
-                </svg>
-              </div>
-              <h3 className='font-semibold text-lg text-gray-900 mb-2'>
-                Secure Sharing
-              </h3>
-              <p className='text-gray-500'>
-                Files are automatically deleted after 20 minutes for your
-                privacy and security.
-              </p>
-            </div>
-            <div className='bg-gray-50 rounded-2xl shadow p-8 flex flex-col items-center text-center border border-gray-100'>
-              <div className='bg-blue-100 p-4 rounded-full mb-4'>
-                <svg
-                  className='h-8 w-8 text-blue-500'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
-                  />
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'
-                  />
-                </svg>
-              </div>
-              <h3 className='font-semibold text-lg text-gray-900 mb-2'>
-                Location Based
-              </h3>
-              <p className='text-gray-500'>
-                Share files with people within a 200m radius, instantly and
-                securely.
-              </p>
-            </div>
-            <div className='bg-gray-50 rounded-2xl shadow p-8 flex flex-col items-center text-center border border-gray-100'>
-              <div className='bg-blue-100 p-4 rounded-full mb-4'>
-                <svg
-                  className='h-8 w-8 text-blue-500'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
-                  />
-                </svg>
-              </div>
-              <h3 className='font-semibold text-lg text-gray-900 mb-2'>
-                Easy Download
-              </h3>
-              <p className='text-gray-500'>
-                One-click download for all shared files. No sign-up required.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id='how' className='py-20 bg-gray-50'>
-        <div className='max-w-4xl mx-auto px-6'>
-          <h2 className='text-3xl md:text-4xl font-bold text-gray-900 text-center mb-12'>
-            How it works
-          </h2>
-          <ol className='space-y-8'>
-            <li className='flex items-start space-x-4'>
-              <span className='flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl'>
-                1
-              </span>
-              <div>
-                <h4 className='font-semibold text-lg text-gray-900 mb-1'>
-                  Enable Location
-                </h4>
-                <p className='text-gray-500'>
-                  We use your device's location to connect you with people
-                  nearby. Your privacy is always protected.
-                </p>
-              </div>
-            </li>
-            <li className='flex items-start space-x-4'>
-              <span className='flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl'>
-                2
-              </span>
-              <div>
-                <h4 className='font-semibold text-lg text-gray-900 mb-1'>
-                  Share or Receive Files
-                </h4>
-                <p className='text-gray-500'>
-                  Drop your files or pick up files from others within your area.
-                  No account needed.
-                </p>
-              </div>
-            </li>
-            <li className='flex items-start space-x-4'>
-              <span className='flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl'>
-                3
-              </span>
-              <div>
-                <h4 className='font-semibold text-lg text-gray-900 mb-1'>
-                  Files Auto-Delete
-                </h4>
-                <p className='text-gray-500'>
-                  All files are deleted after 20 minutes, ensuring your data is
-                  never stored longer than needed.
-                </p>
-              </div>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <section
-        id='security'
-        className='py-20 bg-white border-t border-gray-100'
-      >
-        <div className='max-w-4xl mx-auto px-6 text-center'>
-          <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-6'>
-            Your privacy, our priority
-          </h2>
-          <p className='text-lg text-gray-600 mb-8'>
-            Droplr never stores your files or location longer than necessary.
-            All transfers are encrypted and files are deleted after 20 minutes.
-            You stay in control.
-          </p>
-          <div className='flex flex-col md:flex-row items-center justify-center gap-6'>
-            <div className='flex-1 bg-gray-50 rounded-2xl p-6 border border-gray-100 shadow text-left'>
-              <h4 className='font-semibold text-gray-900 mb-2'>
-                End-to-End Encryption
-              </h4>
-              <p className='text-gray-500'>
-                All file transfers are encrypted for maximum security.
-              </p>
-            </div>
-            <div className='flex-1 bg-gray-50 rounded-2xl p-6 border border-gray-100 shadow text-left'>
-              <h4 className='font-semibold text-gray-900 mb-2'>Auto-Delete</h4>
-              <p className='text-gray-500'>
-                Files are removed from our servers after 20 minutes,
-                automatically.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
         id='get-started'
         className='py-20 bg-gradient-to-r from-blue-600 to-blue-500'
       >
@@ -619,17 +416,6 @@ const App = () => {
           </a>
         </div>
       </section>
-      {/* 
-      <footer className='py-8 bg-white border-t border-gray-100 text-center text-gray-400 text-sm'>
-        &copy; {new Date().getFullYear()} Droplr. Made with ❤️ by{" "}
-        <a
-          href='https://github.com/AboubakarAris'
-          className='text-blue-600 hover:text-blue-700'
-        >
-          Abou Bakar
-        </a>
-        . All rights reserved.
-      </footer> */}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 export const Header = () => {
@@ -11,15 +10,15 @@ export const Header = () => {
         </span>
       </div>
       <nav className='hidden md:flex space-x-8 text-gray-600 font-medium'>
-        <a href='#features' className='hover:text-blue-600 transition'>
+        <Link to='/features' className='hover:text-blue-600 transition'>
           Features
-        </a>
-        <a href='#how' className='hover:text-blue-600 transition'>
+        </Link>
+        <Link to='/how' className='hover:text-blue-600 transition'>
           How it works
-        </a>
-        <a href='#security' className='hover:text-blue-600 transition'>
+        </Link>
+        <Link to='/security' className='hover:text-blue-600 transition'>
           Security
-        </a>
+        </Link>
       </nav>
     </header>
   );
